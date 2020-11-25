@@ -31,12 +31,19 @@ app.get("/articles", function(req, res){
     });
 });
 
+//creates one new article
 app.post("/articles", function(req, res){
     const newArticle = new Article({
         title: req.body.title,
         content: req.body.content
     });
-    newArticle.save();
+    newArticle.save(function(err){
+        if(!err){
+            console.log("successfully added a new article");
+        } else{
+            res.send(err);
+        }
+    });
 });
 
 app.listen(3000, function(){
