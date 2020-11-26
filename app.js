@@ -20,6 +20,7 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
+///////////////////////////Requests Targetting All Articles/////////////////////////
 app.route("/articles")
 
 //Get All Articles
@@ -58,6 +59,34 @@ app.route("/articles")
         }
     });
 });
+
+///////////////////////////Requests Targetting A Specific Article/////////////////////////
+app.route("/articles/:articleTitle")
+
+.get(function(req, res){
+    Article.findOne({title: req.params.articleTitle}, function(err, foundArticle){
+        if(foundArticle){
+            res.send(foundArticle);
+        } else {
+            res.send("No articles matching that title was found.");
+        }
+    });
+})
+
+//PUT a specific article
+.put(function(req, res){
+    Article.update(
+        {title: req.params.articleTitle},
+        {title: req.body.title, content: req.body.content},
+        {overwrite: true},
+        function(err){
+            if(!err){
+                res.send("successfully updated article.");
+            }
+        }
+    );
+});
+
 
 app.listen(3000, function(){
     console.log("server started on port 3000.")
